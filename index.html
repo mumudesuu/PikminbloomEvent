@@ -25,6 +25,12 @@ h1{font-size:24px;margin:0 0 4px}
 .dt{color:var(--mut);font-size:13px}
 .ds{margin-top:4px}
 .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.tags span{font-size:12px;color:var(--mut);border:1px solid var(--bd);border-radius:999px;padding:1px 8px}
+.info{display:grid;gap:6px;margin-top:10px;padding-top:10px;border-top:1px dashed var(--bd)}
+.row{display:flex;gap:8px;align-items:flex-start;font-size:14px}.row .k{flex:0 0 74px;color:var(--mut)}.row .v{flex:1}
+.chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:3px}.chips span{font-size:12px;background:var(--acbg);color:var(--ac);border-radius:6px;padding:1px 7px}
+.fr{color:var(--soon);font-weight:600}.tk-free{color:var(--on);font-weight:600}.tk-pay{color:var(--soon);font-weight:600}
+.opt{font:inherit;font-size:13px;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:8px;padding:3px 10px;cursor:pointer;margin-bottom:14px}
+.opt.a{background:var(--on);border-color:var(--on);color:#fff}
 .cd{margin-top:6px;font-size:13px;font-weight:600}
 .empty{color:var(--mut);text-align:center;padding:40px 0}
 </style>
@@ -34,31 +40,46 @@ h1{font-size:24px;margin:0 0 4px}
 <h1>📍 活動索引</h1>
 <div class="sub">依活動日期自動判斷狀態・點進活動查看詳情</div>
 <div class="tabs" id="tabs"></div>
+<button class="opt" id="free">只看免費</button>
 <div id="list"></div>
 </main>
 <script>
 // ===== 新增活動：在下面 EVENTS 加一筆即可（時間皆為台灣時間）=====
 var EVENTS=[
- {title:"CoCo 門市特殊地點活動",start:"2026-11-05T00:00",end:"2026-11-22T23:59",
-  desc:"全台 CoCo 都可門市出現特殊地點，滑動可得咖啡杯／照片鈕扣徽章飾品皮克敏與特別明信片。",
-  tags:["台灣"],url:"coco1105_1122.html"},
- {title:"皮克敏秋季收穫祭・香港朗豪坊",start:"2026-11-10T00:00",end:"2026-11-22T23:59",
-  desc:"香港朗豪坊 4 樓及 12 樓，特殊地點可得照片鈕扣徽章飾品皮克敏，完成步行 1,000 步挑戰可得活動限定明信片。",
-  tags:["香港"],url:"langham1110_1122.html"},
- {title:"墨爾本 2026 迷你散步",start:"2026-10-29T07:00",end:"2026-11-01T19:00",
-  desc:"澳洲墨爾本中央購物中心及周邊，6 個特殊地點可獲得飾品皮克敏金色花苗。",
-  tags:["澳洲・墨爾本"],url:"melbourne1029_1101.html"},
- {title:"漫步各地迷你活動：海洋博公園",start:"2026-10-07T08:00",end:"2026-12-31T22:59",tags:["日本・沖繩","常駐","免費","每年可領一次"],
-  desc:"7 個特殊地點，滑動 4 個可得金色花苗；每年 1/1 重置。",url:"oceanexpo1007_1231.html"},
- {title:"Pikmin Bloom Journey 2026：神戶（+周邊地區）各地挑戰",start:"2026-11-27T08:00",end:"2026-11-29T22:59",tags:["日本・神戶","線上","票券 NT$330"],
-  desc:"售票線上活動，全球可遠端參加；座標尚未公布。",url:"kobe1127_1129.html"},
- {title:"漫步各地：京都（岡崎地區）Pikmin Bloom Tour",start:"2026-09-14T08:00",end:"2026-12-31T22:59",tags:["日本・京都","常駐","票券 700 金幣"],
-  desc:"12 個特殊地點，滑動 7 個可得明信片。",url:"kyoto0914_1231.html"},
- {title:"漫步各地：橫須賀 Pikmin Bloom Tour",start:"2026-07-17T08:00",end:"2026-12-31T22:59",tags:["日本・橫須賀","常駐","票券 700 金幣"],
-  desc:"12 個特殊地點，滑動 7 個可得明信片。",url:"yokosuka0717_1231.html"},
- {title:"納許維爾 2026 迷你散步",start:"2026-10-03T23:00",end:"2026-11-02T08:00",tags:["美國・納許維爾","金色花苗每 14 天一次"],
-  desc:"7 個特殊地點可得金色花苗，種植 1000 朵花挑戰可得明信片。",url:"nashville1003_1101.html"}
+ {title:"CoCo 門市特殊地點活動",start:"2026-11-05T00:00",end:"2026-11-22T23:59",tags:["台灣"],
+  desc:"全台 CoCo 都可門市出現特殊地點。",
+  seed:{n:"2 種",items:["咖啡杯（各特殊地點）","照片鈕扣徽章（走 2,000 步任務・首次）"]},card:"有（僅 1 款，各地點相同）",
+  freq:"每個地點每 7 天一次",freqNote:"走 2,000 步任務僅首次",ticket:"免費",url:"coco1105_1122.html"},
+ {title:"皮克敏秋季收穫祭・香港朗豪坊",start:"2026-11-10T00:00",end:"2026-11-22T23:59",tags:["香港"],
+  desc:"香港朗豪坊 4 樓及 12 樓；座標活動開始後提供。",
+  seed:{n:"1 株",items:["照片鈕扣徽章（紅色）"]},card:"有（步行 1,000 步任務）",
+  freq:"限一次",freqNote:"每位用戶活動期間 1 株",ticket:"免費",url:"langham1110_1122.html"},
+ {title:"墨爾本 2026 迷你散步",start:"2026-10-29T07:00",end:"2026-11-01T19:00",tags:["澳洲・墨爾本"],
+  desc:"墨爾本中央購物中心及周邊，6 個特殊地點。",
+  seed:{n:"6 株",items:["迷你書","糕點（黃皮）","皮克敏4 宇宙船","巧克力（紅皮）","下午茶","四葉幸運草"]},card:"無",
+  freq:"公告未標示",ticket:"免費",url:"melbourne1029_1101.html"},
+ {title:"漫步各地迷你活動：海洋博公園",start:"2026-10-07T08:00",end:"2026-12-31T22:59",tags:["日本・沖繩","常駐"],
+  desc:"7 個特殊地點，滑動 4 個可得金色花苗。",
+  seed:{n:"5 株",items:["衝浪板鑰匙圈","夏季貼紙","珊瑚","照片鈕扣徽章","金色禮物貼紙（藍色・任務）"]},card:"3 張（水族館、海豚劇場、夕陽廣場）",
+  freq:"每年一次",freqNote:"隔年 1/1 更新",ticket:"免費",url:"oceanexpo1007_1231.html"},
+ {title:"Pikmin Bloom Journey 2026：神戶（+周邊地區）各地挑戰",start:"2026-11-27T08:00",end:"2026-11-29T22:59",tags:["日本・神戶","線上"],
+  desc:"售票線上活動，全球可遠端參加；座標尚未公布。",
+  seed:{n:"1 株",items:["藍色玫瑰花結（種 3000 朵藍色繡球花任務）"]},card:"有（神戶特別設計款）",
+  freq:"僅活動期間（3 天）",ticket:"票券 NT$330",pay:1,url:"kobe1127_1129.html"},
+ {title:"漫步各地：京都（岡崎地區）Pikmin Bloom Tour",start:"2026-09-14T08:00",end:"2026-12-31T22:59",tags:["日本・京都","常駐"],
+  desc:"12 個特殊地點，滑動 7 個可得明信片。",
+  seed:{n:"12 株",items:["硬幣","橋梁","金色禮物貼紙（藍色）","壽司","神社","迷你樂器（管弦）","主題園區","美術館","動物園","水邊","美術館","車站車票"]},card:"1 張",
+  freq:"每年一次",freqNote:"隔年 1/1 票券失效，可重新購買",ticket:"票券 700 金幣",pay:1,url:"kyoto0914_1231.html"},
+ {title:"漫步各地：橫須賀 Pikmin Bloom Tour",start:"2026-07-17T08:00",end:"2026-12-31T22:59",tags:["日本・橫須賀","常駐"],
+  desc:"12 個特殊地點，滑動 7 個可得明信片。",
+  seed:{n:"12 株",items:["車票","畫框","爆米花","咖啡杯","甜甜圈","漢堡","禮物貼紙","塔可餅","幸運草","義式餐廳","照片鈕扣徽章","手指滑板"]},card:"1 張",
+  freq:"每年一次",freqNote:"隔年 1/1 可重新購票參加",ticket:"票券 700 金幣",pay:1,url:"yokosuka0717_1231.html"},
+ {title:"納許維爾 2026 迷你散步",start:"2026-10-03T23:00",end:"2026-11-02T08:00",tags:["美國・納許維爾"],
+  desc:"7 個特殊地點；種植 1000 朵花挑戰可得明信片。",
+  seed:{n:"7 株",items:["禮物貼紙","管弦樂器","巧克力","照片鈕扣","冰淇淋（2024）","銅管樂器","餐廳"]},card:"1 張（種植 1000 朵花）",
+  freq:"每個地點每 14 天一次",ticket:"免費",url:"nashville1003_1101.html"}
 ];
+var onlyFree=false;
 var TABS=[["all","全部"],["on","進行中"],["soon","尚未開始"],["end","已結束"]],cur="on";
 var LBL={on:"進行中",soon:"尚未開始",end:"已結束"};
 function ts(s){return new Date(s+":00+08:00").getTime()}
@@ -70,7 +91,7 @@ function render(){
   var cnt={all:L.length,on:0,soon:0,end:0};L.forEach(function(e){cnt[e.st]++});
   var tb=document.getElementById("tabs");tb.innerHTML="";
   TABS.forEach(function(t){var b=document.createElement("button");b.className=cur===t[0]?"a":"";b.innerHTML=t[1]+"<b>"+cnt[t[0]]+"</b>";b.onclick=function(){cur=t[0];render()};tb.appendChild(b)});
-  var v=L.filter(function(e){return cur==="all"||e.st===cur});
+  var v=L.filter(function(e){return (cur==="all"||e.st===cur)&&(!onlyFree||!e.pay)});
   var ord={on:0,soon:1,end:2};
   v.sort(function(x,y){return x.st!==y.st?ord[x.st]-ord[y.st]:x.st==="on"?x.b-y.b:x.st==="soon"?x.a-y.a:y.b-x.b});
   var ls=document.getElementById("list");ls.innerHTML="";
@@ -82,11 +103,21 @@ function render(){
     a.querySelector(".ttl").textContent=e.title;
     a.querySelector(".dt").textContent=fmt(e.start)+" ～ "+fmt(e.end);
     a.querySelector(".ds").textContent=e.desc||"";
+    var inf=document.createElement("div");inf.className="info";
+    function row(k,vh){var r=document.createElement("div");r.className="row";r.innerHTML='<div class="k"></div><div class="v"></div>';r.querySelector(".k").textContent=k;r.querySelector(".v").innerHTML=vh;inf.appendChild(r);return r}
+    function esc(x){return x.replace(/&/g,"&amp;").replace(/</g,"&lt;")}
+    var r1=row("🌱 金色花苗",'<b>'+esc(e.seed.n)+'</b><div class="chips"></div>');
+    e.seed.items.forEach(function(t){var c=document.createElement("span");c.textContent=t;r1.querySelector(".chips").appendChild(c)});
+    row("✉️ 明信片",esc(e.card));
+    row("🔁 頻率",'<span class="fr">'+esc(e.freq)+'</span>'+(e.freqNote?'<div class="dt">'+esc(e.freqNote)+'</div>':''));
+    row("🎫 票券",'<span class="'+(e.pay?"tk-pay":"tk-free")+'">'+esc(e.ticket)+'</span>');
+    a.appendChild(inf);
     if(e.tags)e.tags.forEach(function(t){var x=document.createElement("span");x.textContent=t;a.querySelector(".tags").appendChild(x)});
     if(cd)a.querySelector(".cd").textContent=cd;
     ls.appendChild(a)
   })
 }
+document.getElementById("free").onclick=function(){onlyFree=!onlyFree;this.className="opt"+(onlyFree?" a":"");render()};
 render();setInterval(render,60000);
 </script>
 </body>
