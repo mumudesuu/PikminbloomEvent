@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E🎮%3C/text%3E%3C/svg%3E">
+<title>沐的皮克敏活動筆記</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f6f7f9;--card:#fff;--tx:#1d2330;--mut:#6b7280;--bd:#e3e6ec;--ac:#0d9488;--acbg:#e6f6f4;--on:#16a34a;--onbg:#e8f7ee;--soon:#d97706;--soonbg:#fdf3e1;--end:#6b7280;--endbg:#eef0f3}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14171c;--card:#1d2128;--tx:#e8eaee;--mut:#98a1b0;--bd:#2d333d;--ac:#2dd4bf;--acbg:#16312e;--on:#4ade80;--onbg:#14301f;--soon:#fbbf24;--soonbg:#35290f;--endbg:#262b33}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 -apple-system,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif}
+main{max-width:820px;margin:0 auto;padding:22px 14px 80px}
+h1{font-size:24px;margin:0 0 4px}
+.sub{color:var(--mut);margin-bottom:16px}
+.tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.tabs button{font:inherit;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:999px;padding:6px 14px;cursor:pointer}
+.tabs button.a{background:var(--ac);border-color:var(--ac);color:#fff}
+.tabs b{font-weight:600;opacity:.8;margin-left:4px}
+.ev{display:block;text-decoration:none;color:inherit;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px 16px;margin-bottom:10px;transition:border-color .15s}
+.ev:hover{border-color:var(--ac)}
+.top{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.badge{font-size:12px;font-weight:600;border-radius:999px;padding:2px 10px;white-space:nowrap}
+.s-on{background:var(--onbg);color:var(--on)}.s-soon{background:var(--soonbg);color:var(--soon)}.s-end{background:var(--endbg);color:var(--end)}
+.ttl{font-weight:600;font-size:16px;flex:1}
+.dt{color:var(--mut);font-size:13px}
+.ds{margin-top:4px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.tags span{font-size:12px;color:var(--mut);border:1px solid var(--bd);border-radius:999px;padding:1px 8px}
+.info{display:grid;gap:6px;margin-top:10px;padding-top:10px;border-top:1px dashed var(--bd)}
+.row{display:flex;gap:8px;align-items:flex-start;font-size:14px}.row .k{flex:0 0 74px;color:var(--mut)}.row .v{flex:1}
+.chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:3px}.chips span{font-size:12px;background:var(--acbg);color:var(--ac);border-radius:6px;padding:1px 7px}
+.fr{color:var(--soon);font-weight:600}.tk-free{color:var(--on);font-weight:600}.tk-pay{color:var(--soon);font-weight:600}
+.opt{font:inherit;font-size:13px;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:8px;padding:3px 10px;cursor:pointer;margin-bottom:14px}
+.opt.a{background:var(--on);border-color:var(--on);color:#fff}
+.foot{margin-top:28px;font-size:12px;color:var(--mut);text-align:center}
+.cd{margin-top:6px;font-size:13px;font-weight:600}
+.empty{color:var(--mut);text-align:center;padding:40px 0}
+</style>
+</head>
+<body>
+<main>
+<h1>沐的皮克敏活動筆記🎮</h1>
+<div class="sub">依活動日期自動判斷狀態・點進活動查看詳情</div>
+<div class="tabs" id="tabs"></div>
+<button class="opt" id="free">只看免費</button>
+<div id="list"></div>
+<div class="foot">由沐整理更新網上資訊</div>
+</main>
+<script>
+// ===== 新增活動：在下面 EVENTS 加一筆即可（時間皆為台灣時間）=====
+var EVENTS=[
+ {title:"CoCo 門市特殊地點活動",start:"2026-11-05T00:00",end:"2026-11-22T23:59",tags:["台灣"],
+  desc:"全台 CoCo 都可門市出現特殊地點。",
+  seed:{n:"2 種",items:["咖啡杯（各特殊地點）","照片鈕扣徽章（走 2,000 步任務・首次）"]},card:"有（僅 1 款，各地點相同）",
+  freq:"每個地點每 7 天一次",freqNote:"走 2,000 步任務僅首次",ticket:"免費",url:"coco1105_1122.html"},
+ {title:"皮克敏秋季收穫祭・香港朗豪坊",start:"2026-11-10T00:00",end:"2026-11-22T23:59",tags:["香港"],
+  desc:"香港朗豪坊 4 樓及 12 樓；座標活動開始後提供。",
+  seed:{n:"1 株",items:["照片鈕扣徽章（紅色）"]},card:"有（步行 1,000 步任務）",
+  freq:"限一次",freqNote:"每位用戶活動期間 1 株",ticket:"免費",url:"langham1110_1122.html"},
+ {title:"墨爾本 2026 迷你散步",start:"2026-10-29T07:00",end:"2026-11-01T19:00",tags:["澳洲・墨爾本"],
+  desc:"墨爾本中央購物中心及周邊，6 個特殊地點。",
+  seed:{n:"6 株",items:["迷你書","糕點（黃皮）","皮克敏4 宇宙船","巧克力（紅皮）","下午茶","四葉幸運草"]},card:"無",
+  freq:"公告未標示",ticket:"免費",url:"melbourne1029_1101.html"},
+ {title:"漫步各地迷你活動：海洋博公園",start:"2026-10-07T08:00",end:"2026-12-31T22:59",tags:["日本・沖繩","常駐"],
+  desc:"7 個特殊地點，滑動 4 個可得金色花苗。",
+  seed:{n:"5 株",items:["衝浪板鑰匙圈","夏季貼紙","珊瑚","照片鈕扣徽章","金色禮物貼紙（藍色・任務）"]},card:"3 張（水族館、海豚劇場、夕陽廣場）",
+  freq:"每年一次",freqNote:"隔年 1/1 更新",ticket:"免費",url:"oceanexpo1007_1231.html"},
+ {title:"Pikmin Bloom Journey 2026：神戶（+周邊地區）各地挑戰",start:"2026-11-27T08:00",end:"2026-11-29T22:59",tags:["日本・神戶","線上"],
+  desc:"售票線上活動，全球可遠端參加；座標尚未公布。",
+  seed:{n:"1 株",items:["藍色玫瑰花結（種 3000 朵藍色繡球花任務）"]},card:"有（神戶特別設計款）",
+  freq:"僅活動期間（3 天）",ticket:"票券 NT$330",pay:1,url:"kobe1127_1129.html"},
+ {title:"漫步各地：京都（岡崎地區）Pikmin Bloom Tour",start:"2026-09-14T08:00",end:"2026-12-31T22:59",tags:["日本・京都","常駐"],
+  desc:"12 個特殊地點，滑動 7 個可得明信片。",
+  seed:{n:"12 株",items:["硬幣","橋梁","金色禮物貼紙（藍色）","壽司","神社","迷你樂器（管弦）","主題園區","美術館","動物園","水邊","美術館","車站車票"]},card:"1 張",
+  freq:"每年一次",freqNote:"隔年 1/1 票券失效，可重新購買",ticket:"票券 700 金幣",pay:1,url:"kyoto0914_1231.html"},
+ {title:"漫步各地：橫須賀 Pikmin Bloom Tour",start:"2026-07-17T08:00",end:"2026-12-31T22:59",tags:["日本・橫須賀","常駐"],
+  desc:"12 個特殊地點，滑動 7 個可得明信片。",
+  seed:{n:"12 株",items:["車票","畫框","爆米花","咖啡杯","甜甜圈","漢堡","禮物貼紙","塔可餅","幸運草","義式餐廳","照片鈕扣徽章","手指滑板"]},card:"1 張",
+  freq:"每年一次",freqNote:"隔年 1/1 可重新購票參加",ticket:"票券 700 金幣",pay:1,url:"yokosuka0717_1231.html"},
+ {title:"納許維爾 2026 迷你散步",start:"2026-10-03T23:00",end:"2026-11-02T08:00",tags:["美國・納許維爾"],
+  desc:"7 個特殊地點；種植 1000 朵花挑戰可得明信片。",
+  seed:{n:"7 株",items:["禮物貼紙","管弦樂器","巧克力","照片鈕扣","冰淇淋（2024）","銅管樂器","餐廳"]},card:"1 張（種植 1000 朵花）",
+  freq:"每個地點每 14 天一次",ticket:"免費",url:"nashville1003_1101.html"},
+ {title:"Pikmin Bloom Journey 2027 in 台北",start:"2027-01-30T00:00",end:"2027-01-31T23:59",tags:["台灣・台北","付費實體活動","詳情未公布"],
+  desc:"首度來台的 Journey，連續兩天；場地、票價、獎勵待官方公布。",
+  seed:{n:"未公布",items:[]},card:"未公布",freq:"未公布",ticket:"付費（票價未公布）",pay:1,url:"journeytaipei0130_0131.html"},
+ {title:"漫步各地：札幌 Pikmin Bloom Tour",start:"2026-04-27T08:00",end:"2026-12-31T22:59",tags:["日本・札幌","常駐"],
+  desc:"12 個特殊地點，滑動 7 個可得明信片。",
+  seed:{n:"12 株",items:["馬卡龍","咖啡杯","迷你書（岩石皮克敏）","畫框","橡栗","爆米花","票券","四葉幸運草","壽司","主題樂園門票","照片鈕扣徽章","禮物貼紙（金色）"]},card:"1 張",
+  freq:"每年一次",freqNote:"隔年 1/1 可重新購票參加",ticket:"票券 700 金幣",pay:1,url:"sapporo0427_1231.html"},
+ {title:"宮島服務區的 Pikmin Terrace",start:"2026-05-01T00:00",end:"2027-03-31T23:59",tags:["日本・廣島","期間限定"],
+  desc:"宮島服務區（下行線）戶外區域，5 個特殊地點。",
+  seed:{n:"1 株＋運勢皮克敏 1 隻",items:["照片鈕扣徽章（紅色）","運勢飾品皮克敏（顏色與運勢隨機）"]},card:"3 張（拍照區 3 處）",
+  freq:"限一次",freqNote:"每個特殊地點整個活動期間各領 1 次",ticket:"免費",url:"miyajima0501_0331.html"}
+];
+var onlyFree=false;
+var TABS=[["all","全部"],["on","進行中"],["soon","尚未開始"],["end","已結束"]],cur="on";
+var LBL={on:"進行中",soon:"尚未開始",end:"已結束"};
+function ts(s){return new Date(s+":00+08:00").getTime()}
+function fmt(s){var m=s.match(/(\d+)-(\d+)-(\d+)T(\d+):(\d+)/),w="日一二三四五六"[new Date(Date.UTC(+m[1],m[2]-1,+m[3])).getUTCDay()];return m[1]+"/"+(+m[2])+"/"+(+m[3])+"（"+w+"）"+m[4]+":"+m[5]}
+function days(ms){var d=Math.floor(ms/864e5),h=Math.floor(ms%864e5/36e5);return d>0?d+" 天 "+h+" 小時":h+" 小時"}
+function render(){
+  var now=Date.now();
+  var L=EVENTS.map(function(e){var a=ts(e.start),b=ts(e.end);return Object.assign({a:a,b:b,st:now<a?"soon":now>b?"end":"on"},e)});
+  var cnt={all:L.length,on:0,soon:0,end:0};L.forEach(function(e){cnt[e.st]++});
+  var tb=document.getElementById("tabs");tb.innerHTML="";
+  TABS.forEach(function(t){var b=document.createElement("button");b.className=cur===t[0]?"a":"";b.innerHTML=t[1]+"<b>"+cnt[t[0]]+"</b>";b.onclick=function(){cur=t[0];render()};tb.appendChild(b)});
+  var v=L.filter(function(e){return (cur==="all"||e.st===cur)&&(!onlyFree||!e.pay)});
+  var ord={on:0,soon:1,end:2};
+  v.sort(function(x,y){return x.st!==y.st?ord[x.st]-ord[y.st]:x.st==="on"?x.b-y.b:x.st==="soon"?x.a-y.a:y.b-x.b});
+  var ls=document.getElementById("list");ls.innerHTML="";
+  if(!v.length){ls.innerHTML='<div class="empty">這個分類目前沒有活動</div>';return}
+  v.forEach(function(e){
+    var a=document.createElement("a");a.className="ev";a.href=e.url;
+    var cd=e.st==="on"?"還剩 "+days(e.b-now):e.st==="soon"?days(e.a-now)+"後開始":"";
+    a.innerHTML='<div class="top"><span class="ttl"></span><span class="badge s-'+e.st+'">'+LBL[e.st]+'</span></div><div class="dt"></div><div class="ds"></div>'+(e.tags?'<div class="tags"></div>':'')+(cd?'<div class="cd" style="color:var(--'+(e.st==="on"?"on":"soon")+')"></div>':"");
+    a.querySelector(".ttl").textContent=e.title;
+    a.querySelector(".dt").textContent=fmt(e.start)+" ～ "+fmt(e.end);
+    a.querySelector(".ds").textContent=e.desc||"";
+    var inf=document.createElement("div");inf.className="info";
+    function row(k,vh){var r=document.createElement("div");r.className="row";r.innerHTML='<div class="k"></div><div class="v"></div>';r.querySelector(".k").textContent=k;r.querySelector(".v").innerHTML=vh;inf.appendChild(r);return r}
+    function esc(x){return x.replace(/&/g,"&amp;").replace(/</g,"&lt;")}
+    var r1=row("🌱 金色花苗",'<b>'+esc(e.seed.n)+'</b><div class="chips"></div>');
+    e.seed.items.forEach(function(t){var c=document.createElement("span");c.textContent=t;r1.querySelector(".chips").appendChild(c)});
+    row("✉️ 明信片",esc(e.card));
+    row("🔁 頻率",'<span class="fr">'+esc(e.freq)+'</span>'+(e.freqNote?'<div class="dt">'+esc(e.freqNote)+'</div>':''));
+    row("🎫 票券",'<span class="'+(e.pay?"tk-pay":"tk-free")+'">'+esc(e.ticket)+'</span>');
+    a.appendChild(inf);
+    if(e.tags)e.tags.forEach(function(t){var x=document.createElement("span");x.textContent=t;a.querySelector(".tags").appendChild(x)});
+    if(cd)a.querySelector(".cd").textContent=cd;
+    ls.appendChild(a)
+  })
+}
+document.getElementById("free").onclick=function(){onlyFree=!onlyFree;this.className="opt"+(onlyFree?" a":"");render()};
+render();setInterval(render,60000);
+</script>
+</body>
+</html>

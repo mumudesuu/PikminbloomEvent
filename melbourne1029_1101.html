@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E🎮%3C/text%3E%3C/svg%3E">
+<title>墨爾本 2026 迷你散步</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f6f7f9;--card:#fff;--tx:#1d2330;--mut:#6b7280;--bd:#e3e6ec;--ac:#0d9488;--acbg:#e6f6f4}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14171c;--card:#1d2128;--tx:#e8eaee;--mut:#98a1b0;--bd:#2d333d;--ac:#2dd4bf;--acbg:#16312e}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.6 -apple-system,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif}
+main{max-width:820px;margin:0 auto;padding:20px 14px 60px}
+a{color:var(--ac)}
+.back{text-decoration:none;font-size:14px}
+h1{font-size:22px;margin:8px 0 4px}
+.sub{color:var(--mut);margin-bottom:16px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px 16px;margin-bottom:12px}
+.card h2{font-size:16px;margin:0 0 8px;display:flex;align-items:center;gap:8px}
+.card h2 span{flex:1}
+.tm{background:var(--acbg);color:var(--ac);border-radius:8px;padding:8px 12px;font-weight:600}
+.tm small{display:block;font-weight:400;opacity:.9}
+ul{margin:0;padding-left:20px}li{margin:4px 0}
+.note{color:var(--mut);font-size:13px;margin-top:8px}
+.cp{font:13px inherit;font-family:inherit;border:0;background:var(--acbg);color:var(--ac);border-radius:8px;padding:4px 10px;cursor:pointer}
+.g{display:flex;flex-direction:column;gap:8px}
+.c{font:inherit;display:flex;justify-content:space-between;align-items:center;gap:10px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);border-radius:10px;padding:9px 12px;cursor:pointer;text-align:left;width:100%}
+.c:hover{border-color:var(--ac)}.c.ok{background:var(--acbg);border-color:var(--ac)}
+.c b{font-weight:600}
+.c code{font:13px ui-monospace,Menlo,Consolas,monospace;color:var(--mut)}
+.src{margin-top:28px;font-size:11px;color:var(--mut);text-align:center;word-break:break-all}
+.src a{color:var(--mut)}
+#t{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(20px);background:#111;color:#fff;padding:8px 16px;border-radius:20px;opacity:0;transition:.2s;pointer-events:none;font-size:14px;max-width:90vw}
+#t.s{opacity:1;transform:translateX(-50%)}
+</style>
+</head>
+<body>
+<main>
+<a class="back" href="index.html">← 回活動索引</a>
+<h1>🦘 墨爾本 2026 迷你散步</h1>
+<div class="sub">Pikmin Bloom 首場澳洲迷你散步</div>
+
+<section class="card">
+<h2>活動時間</h2>
+<div class="tm">2026/10/29（四）～ 11/1（日）
+<small>台灣時間 10/29 07:00 ～ 11/1 19:00</small>
+<small>墨爾本時間 10/29 10:00 ～ 11/1 22:00</small></div>
+</section>
+
+<section class="card">
+<h2>地點</h2>
+<div>澳洲墨爾本中央購物中心（Melbourne Central）及周邊地區</div>
+</section>
+
+<section class="card">
+<h2>應用程式內活動</h2>
+<ul>
+<li>免費、開放所有人參加的小型活動。</li>
+<li>活動期間在購物中心及周邊設有 <b>6 個特殊地點</b>。</li>
+<li>與特殊地點互動，可獲得對應地點飾品皮克敏的<b>金色花苗</b>。</li>
+</ul>
+<div class="note">天氣或其他因素可能使活動與禮物發放變動或取消。<a href="https://storage.googleapis.com/nianticweb-axiom-cdn/pikminbloom/uploads/d487b599ad8235f79e57e2313cb0eedd41f2b766.pdf" target="_blank" rel="noopener">官方活動地圖 PDF</a></div>
+</section>
+
+<section class="card">
+<h2><span>📍 特殊地點座標</span><button class="cp" id="all">複製全部</button></h2>
+<div class="g" id="g"></div>
+</section>
+
+<div class="src">資訊來源：<a href="https://pikminbloom.com/zh_hant/news/oct26-melbournecentral" target="_blank" rel="noopener">https://pikminbloom.com/zh_hant/news/oct26-melbournecentral</a></div>
+</main>
+<div id="t"></div>
+<script>
+var P=[["迷你書","-37.810001, 144.964436"],["糕點（黃皮）","-37.810885, 144.963936"],["皮克敏4 的宇宙船","-37.810137, 144.963103"],["巧克力（紅皮）","-37.810665, 144.963052"],["下午茶","-37.811992, 144.960461"],["四葉幸運草","-37.806229, 144.970303"]];
+var T=document.getElementById('t'),tm;
+function toast(m){T.textContent=m;T.className='s';clearTimeout(tm);tm=setTimeout(function(){T.className=''},1400)}
+function copy(txt,msg){
+  function fb(){var a=document.createElement('textarea');a.value=txt;a.style.cssText='position:fixed;opacity:0';document.body.appendChild(a);a.select();try{document.execCommand('copy');toast(msg)}catch(e){toast('複製失敗')}document.body.removeChild(a)}
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(function(){toast(msg)},fb)}else fb()
+}
+var g=document.getElementById('g');
+P.forEach(function(p){
+  var b=document.createElement('button');b.className='c';
+  b.innerHTML='<b></b><code></code>';b.querySelector('b').textContent=p[0];b.querySelector('code').textContent=p[1];
+  b.onclick=function(){copy(p[1],'已複製 '+p[0]);b.classList.add('ok');setTimeout(function(){b.classList.remove('ok')},700)};
+  g.appendChild(b)
+});
+document.getElementById('all').onclick=function(){copy(P.map(function(p){return p[1]}).join('\n'),'已複製全部 '+P.length+' 筆')};
+</script>
+</body>
+</html>
