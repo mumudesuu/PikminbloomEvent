@@ -50,6 +50,12 @@ ul{margin:0;padding-left:20px}li{margin:4px 0}
 dialog{border:1px solid var(--bd);border-radius:12px;background:var(--card);color:var(--tx);max-width:90vw;width:420px}
 dialog textarea{width:100%;height:160px;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:8px;font:12px ui-monospace,monospace}
 dialog .row2{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
+.warn{background:#fdf3e1;color:#8a5a00;border:1px solid #f0d9a8;border-radius:8px;padding:8px 12px;font-size:13px;margin-bottom:10px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .warn{background:#35290f;color:#fbbf24;border-color:#5a4513}}
+.sv{font-size:13px;margin:0 0 8px;min-height:18px}.sv.bad{color:#d97706;font-weight:600}.sv.ok{color:var(--ac);font-weight:600}
+.sb.big{padding:6px 12px;font-size:13px}
+.rs2 textarea{display:block;width:calc(100% - 20px);margin:0 10px;height:110px;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:8px;font:12px ui-monospace,monospace;padding:6px}
+.rs2 .row2{display:flex;justify-content:flex-end;padding:8px 10px}
 </style>
 </head>
 <body>
@@ -64,31 +70,35 @@ dialog .row2{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
 <section class="card" id="coords">
 <h2><span>📍 CoCo 門市座標</span></h2>
 <div class="note" style="margin:0 0 10px">共 <b id="tot"></b> 筆。座標為 CoCo 都可門市位置，部分門市不包含在本次活動內。點座標可複製，勾選方塊代表已抵達。</div>
+<div class="warn">💾 <b>勾選紀錄會自動存在這台裝置的這個瀏覽器</b>，重新整理後仍會保留；但不會跨裝置同步，清除瀏覽資料也會消失。要換裝置或備份，請按「複製已打勾」，到新裝置貼回下方「繼續上次進度」。離開頁面前若有未備份的勾選，會提醒你。</div>
 <div class="bar2"><div class="pg"><i id="pgi"></i></div><span class="ct" id="pgt"></span></div>
-<div class="bar2"><label class="opt"><input type="checkbox" id="hd"> 只看未抵達</label><button class="sb" id="bk">備份進度</button><button class="sb" id="rs">還原進度</button></div>
-<div class="note" style="margin:0 0 6px">進度只存在這個瀏覽器；換裝置或清除瀏覽資料前，請先按「備份進度」。</div>
+<div class="sv" id="sv"></div>
+<div class="bar2"><button class="sb big" id="cpd">複製已打勾</button><button class="sb big" id="cpu">複製未打勾</button><label class="opt"><input type="checkbox" id="hd"> 只看未抵達</label></div>
+<details class="rs2"><summary>📋 繼續上次進度：貼上已打勾的座標</summary><textarea id="ta" placeholder="貼上先前「複製已打勾」的座標，一行一筆"></textarea><div class="row2"><button class="sb big" id="dok">套用</button></div></details>
 <div id="cl"></div>
 </section>
-<dialog id="dlg"><div>貼上先前備份的座標清單（一行一筆）：</div><textarea id="ta"></textarea><div class="row2"><button class="sb" id="dno">取消</button><button class="sb" id="dok">還原</button></div></dialog>
+<dialog id="lv"><div style="font-weight:600;margin-bottom:6px">要先備份核取紀錄嗎？</div><div>你有 <b id="lvn">0</b> 筆勾選還沒複製備份。紀錄雖然已自動存在這個瀏覽器，但換裝置或清除瀏覽資料後會消失。</div><div class="row2" style="flex-wrap:wrap"><button class="sb big" id="lvk">留在此頁</button><button class="sb big" id="lvx">直接離開</button><button class="sb big" id="lvs">複製已打勾並離開</button></div></dialog>
 <div class="src">資訊來源：<a href="https://www.nownews.com/news/6889523" target="_blank" rel="noopener">https://www.nownews.com/news/6889523</a></div>
 </main>
 <div id="t"></div>
 <script>
 var DATA=[{"id":"tw","n":"🇹🇼 台灣","g":[{"n":"金門縣","d":"24.441449,118.415655;24.434776,118.319371;24.4347149,118.3184855"},{"n":"新北市","d":"25.258803,121.50222;25.227583,121.451885;25.22111,121.637982;25.183434,121.424249;25.177762,121.44383;25.170998,121.445765;25.156376,121.459403;25.146579,121.398156;25.136214,121.461779;25.125918,121.452847;25.107807,121.806041;25.101455,121.450391;25.09102,121.473956;25.090829,121.459099;25.089657,121.446018;25.08621,121.479431;25.084577,121.438664;25.083706,121.491544;25.081899,121.464939;25.080261,121.462542;25.078792,121.483176;25.077593,121.373896;25.077382,121.393903;25.073074,121.370517;25.072564,121.496348;25.069462,121.47717;25.067319,121.662682;25.067316,121.492584;25.065928,121.642137;25.065335,121.457455;25.0653,121.634504;25.063173,121.485593;25.06247,121.650081;25.060911,121.497965;25.059592,121.431685;25.054877,121.46638;25.054166,121.491102;25.050679,121.454665;25.049475,121.447467;25.044946,121.452409;25.040849,121.425017;25.034613,121.449407;25.031144,121.478446;25.030698,121.434171;25.024504,121.4247;25.024399,121.471128;25.022557,121.46121;25.019366,121.42159;25.016769,121.426141;25.015211,121.479341;25.0130249,121.5124652;25.008488,121.4717322;25.0053054,121.4987819;25.0034516,121.4690242;25.0028456,121.5110729;25.002478,121.4628312;25.0023427,121.6190509;25.0016693,121.4811863;24.9992619,121.4883202;24.9990601,121.52549;24.9984281,121.499;24.9977744,121.4473831;24.9970653,121.5040883;24.9968977,121.5154481;24.995012,121.4228013;24.9932175,121.5222949;24.9930703,121.5046378;24.9911457,121.4255644;24.9906367,121.4923595;24.9883154,121.5095271;24.9873298,121.4635031;24.98522,121.42872;24.9811289,121.4187389;24.9780726,121.5465308;24.9754216,121.5366454;24.9740029,121.441181;24.9651669,121.5403831;24.9637798,121.5148631;24.9533937,121.3482489;24.953338,121.49318;24.9437545,121.3741646;24.940293,121.337034;24.9373577,121.37032;24.931349,121.3732875"},{"n":"基隆市","d":"25.150902,121.771885;25.145026,121.726623;25.140208,121.709279;25.13723,121.75091;25.136016,121.787005;25.127793,121.737006;25.127619,121.742217;25.120438,121.723072;25.097467,121.712822;25.081757,121.696083"},{"n":"臺北市","d":"25.140375,121.500476;25.136627,121.49561;25.107982,121.528817;25.094649,121.521969;25.088827,121.518389;25.084825,121.593229;25.083522,121.566988;25.083037,121.519564;25.082628,121.546274;25.08186,121.59235;25.070705,121.611694;25.068906,121.613817;25.068771,121.585883;25.065996,121.516109;25.065713,121.540812;25.064535,121.511022;25.060451,121.525421;25.060327,121.539989;25.059255,121.618029;25.057386,121.517608;25.056392,121.605882;25.052286,121.555048;25.05209,121.545616;25.050628,121.560926;25.049444,121.578913;25.048165,121.518446;25.04631,121.51732;25.046097,121.513512;25.045289,121.583962;25.044992,121.516266;25.044313,121.508425;25.044298,121.568912;25.043414,121.524222;25.041502,121.54508;25.034398,121.527193;25.032679,121.538229;25.030264,121.516591;25.028197,121.506244;25.027667,121.563314;25.026327,121.494065;25.02106,121.554811;25.000015,121.55573;24.984776,121.56139"},{"n":"桃園市","d":"25.1007082,121.2613697;25.085194,121.28606;25.0746214,121.2593115;25.0666958,121.1802901;25.0656397,121.2867133;25.0645754,121.1969095;25.0599219,121.3688923;25.0558387,121.2981104;25.0557565,121.3627184;25.051822,121.118006;25.0502296,121.2910441;25.047826,121.142896;25.0468575,121.2939092;25.0403937,121.388044;25.0397928,121.2892402;25.036752,121.082458;25.0352605,121.3023209;25.0240979,121.2972469;25.0238962,121.2597444;25.0197483,121.265918;25.017097,121.295499;25.0170009,121.4023251;25.0167833,121.2133849;25.0155668,121.3110656;25.013089,121.135562;25.0127262,121.3170089;25.0095489,121.2138737;25.0068392,121.303533;25.005109,121.228529;24.9935921,121.3369311;24.9928878,121.2997343;24.9914513,121.343899;24.9909023,121.323225;24.9906801,121.3104281;24.9897939,121.280067;24.9896277,121.291965;24.9894896,121.3125237;24.98935,121.030535;24.988727,121.181107;24.9837507,121.3184757;24.9792288,121.2501787;24.9754398,121.2711455;24.9740516,121.2557513;24.973096,121.10482;24.9718031,121.2351701;24.970785,121.3271402;24.9703724,121.2573815;24.9694023,121.2501222;24.9674945,121.2329279;24.9649742,121.2615263;24.9648849,121.1510256;24.9643152,121.2256284;24.9635812,121.3038059;24.9594199,121.2964948;24.9580967,121.1665163;24.9575161,121.2144858;24.9575131,121.2051506;24.9568669,121.23906;24.956103,121.264151;24.9544875,121.2255897;24.9520069,121.2103113;24.9518278,121.2033381;24.9483113,121.2974367;24.9458512,121.2195744;24.9454785,121.247225;24.9416656,121.2162164;24.9363011,121.0817139;24.9356754,121.2341841;24.934501,121.123024;24.9325086,121.2973403;24.929491,121.286806;24.9225113,121.1773409;24.922013,121.251046;24.9176818,121.1848061;24.9154177,121.2104105;24.9123726,121.1458979;24.91176,121.183228;24.9109525,121.1563582;24.9081311,121.145645;24.9062174,121.1770848;24.9010087,121.2836337;24.900191,121.2090746;24.8813632,121.2889274;24.878651,121.21144;24.874064,121.233776;24.866127,121.213804;24.864687,121.2172;24.848972,121.230097;24.829548,121.192851"},{"n":"新竹縣","d":"24.902701,121.044303;24.901131,121.046828;24.899861,120.986492;24.873155,121.01481;24.870862,120.995783;24.870045,121.026372;24.863584,121.026568;24.841112,121.000155;24.835215,121.013433;24.834079,121.010343;24.827877,121.080581;24.825991,121.008989;24.822924,121.026379;24.818951,121.023258;24.807973,121.03389;24.77701,121.077958;24.767542,121.055813;24.765284,120.990433;24.743959,121.083528;24.737559,121.088938;24.736717,121.095849;24.722214,121.096329;24.7019,121.057311"},{"n":"新竹市","d":"24.841125,120.937081;24.821349,120.975334;24.816074,120.974431;24.812676,120.964227;24.810365,120.976866;24.809494,120.974721;24.808749,120.973863;24.805335,120.952548;24.804648,120.965325;24.804604,120.971955;24.799982,120.965015;24.798528,120.997271;24.797183,120.975756;24.796954,120.941746;24.796437,120.998648;24.789922,120.927937;24.789056,120.966723;24.785974,121.018311;24.777321,121.023332;24.756856,120.952609;24.74308,120.905762"},{"n":"宜蘭縣","d":"24.826409,121.771724;24.760675,121.753234;24.747189,121.784159;24.684872,121.797014;24.677758,121.767158;24.667242,121.767892;24.59617,121.851374"},{"n":"苗栗縣","d":"24.699174,120.899407;24.69381,120.913;24.688209,120.879273;24.687438,120.870723;24.686331,120.910132;24.686281,120.907347;24.685419,120.878285;24.683576,120.906168;24.680342,120.94645;24.614831,120.78976;24.614508,120.78733;24.569257,120.819945;24.560583,120.818592;24.552046,120.816051;24.504901,120.826988;24.489305,120.678091;24.4882,120.787426;24.442988,120.652435;24.411103,120.768494"},{"n":"臺中市","d":"24.346788,120.620367;24.33039,120.711454;24.308831,120.724959;24.27107,120.575964;24.255427,120.530544;24.25098,120.720657;24.245176,120.727385;24.235891,120.55893;24.228745,120.573852;24.225051,120.648999;24.210052,120.700816;24.182087,120.592699;24.177433,120.690175;24.170167,120.644929;24.152195,120.717455;24.13712,120.68691;24.135997,120.687658;24.129773,120.645763;24.1152504,120.6813546;24.106551,120.689843;24.090799,120.703199;24.063796,120.698713"},{"n":"彰化縣","d":"24.111367,120.499351;24.075135,120.539848"},{"n":"南投縣","d":"23.98185,120.684454;23.900106,120.711595"},{"n":"雲林縣","d":"23.788697,120.477402;23.708141,120.433508;23.701729,120.530441"},{"n":"嘉義縣","d":"23.463909,120.244106"},{"n":"臺南市","d":"23.084141,120.295098;23.008728,120.233561;22.999371,120.254128;22.997624,120.199189;22.990591,120.232675;22.98922,120.168225;22.969591,120.227317"},{"n":"高雄市","d":"22.780137,120.299963;22.726461,120.306578;22.709758,120.29668;22.664377,120.311033;22.656133,120.306494;22.639728,120.351163;22.620003,120.307744;22.612927,120.30439;22.605079,120.304449;22.59512,120.30691;22.583414,120.33007;22.571202,120.340205"}]}];
-var DONE=new Set();
-try{var sv=localStorage.getItem('coco5done');if(sv)JSON.parse(sv).forEach(function(k){DONE.add(k)})}catch(e){}
-var st;function save(){clearTimeout(st);st=setTimeout(function(){try{localStorage.setItem('coco5done',JSON.stringify(Array.from(DONE)))}catch(e){}},300)}
+var DONE=new Set(),KEY='coco5done',dirty=false,skipUnload=false,pend=null,pendPop=false;
+try{var sv0=localStorage.getItem(KEY);if(sv0)JSON.parse(sv0).forEach(function(k){var m=String(k).split(',');if(m.length===2)DONE.add(norm(m[0],m[1]))})}catch(e){}
+var svt;function save(){clearTimeout(svt);svt=setTimeout(function(){try{localStorage.setItem(KEY,JSON.stringify(Array.from(DONE)))}catch(e){}},300)}
+function f7(x){return (+x).toFixed(7).replace(/0+$/,'').replace(/\.$/,'')}
+function norm(a,b){return f7(a)+', '+f7(b)}
 var T=document.getElementById('t'),tmo;
-function toast(m){T.textContent=m;T.className='s';clearTimeout(tmo);tmo=setTimeout(function(){T.className=''},1400)}
-function copy(txt,msg){function fb(){var a=document.createElement('textarea');a.value=txt;a.style.cssText='position:fixed;opacity:0';document.body.appendChild(a);a.select();try{document.execCommand('copy');toast(msg)}catch(e){toast('複製失敗')}document.body.removeChild(a)}
-if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(function(){toast(msg)},fb)}else fb()}
-var root=document.getElementById('cl'),ALL=[],total=0;
+function toast(m){T.textContent=m;T.className='s';clearTimeout(tmo);tmo=setTimeout(function(){T.className=''},1600)}
+function copy(txt,msg,ok){function done(){toast(msg);if(ok)ok()}
+function fb(){var a=document.createElement('textarea');a.value=txt;a.style.cssText='position:fixed;opacity:0';document.body.appendChild(a);a.select();var s=false;try{s=document.execCommand('copy')}catch(e){}document.body.removeChild(a);if(s)done();else toast('複製失敗')}
+if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(done,fb)}else fb()}
+var root=document.getElementById('cl'),ALL=[],UNI=[],seen={};
 function mk(h){var e=document.createElement('div');e.innerHTML=h;return e.firstChild}
-DATA.forEach(function(c){
-  c.groups=c.g.map(function(g){var items=g.d.split(';').map(function(p){var a=p.split(',');return a[0]+', '+a[1]});g.items=items;ALL.push(g);return g});
-  c.cnt=0;c.groups.forEach(function(g){if(g.note===undefined||true){}});
-  c.size=c.groups.filter(function(g){return !g.note}).reduce(function(s,g){return s+g.items.length},0);total+=c.size;
-});
+DATA.forEach(function(c){c.groups=c.g;c.size=0;
+  c.g.forEach(function(g){g.items=g.d.split(';').map(function(p){var a=p.split(',');return norm(a[0],a[1])});ALL.push(g);
+    if(!g.note){c.size+=g.items.length;g.items.forEach(function(k){if(!seen[k]){seen[k]=1;UNI.push(k)}})}})});
+var total=UNI.length;
 document.getElementById('tot').textContent=total.toLocaleString();
 DATA.forEach(function(c){
   var d=mk('<details><summary><span class="nm"></span><span class="ct"></span></summary><div class="gb"></div></details>');
@@ -106,31 +116,48 @@ DATA.forEach(function(c){
       copy(arr.join('\n'),'已複製 '+g.n+' '+arr.length+' 筆')});
     gb.appendChild(gd)
   });
-  if(DATA.length===1)d.open=true;root.appendChild(d)
+  if(DATA.length===1)d.open=true;
+  root.appendChild(d)
 });
 function render(g){g.ok=1;var h=[];for(var i=0;i<g.items.length;i++){var k=g.items[i],c=DONE.has(k);h.push('<div class="r'+(c?' done':'')+'" data-k="'+k+'"><input type="checkbox"'+(c?' checked':'')+'><span class="cc">'+k+'</span></div>')}g.box.innerHTML=h.join('')}
+function setDirty(v){if(v!==undefined)dirty=v;var s=document.getElementById('sv');if(!DONE.size){s.textContent='';s.className='sv'}else{s.textContent='💾 已自動儲存在此瀏覽器（'+DONE.size+' 筆）'+(dirty?'・尚未複製備份':'・已複製備份');s.className='sv '+(dirty?'bad':'ok')}}
 function counts(){
-  var done=0;
-  DATA.forEach(function(c){var cd=0;c.groups.forEach(function(g){var n=0;for(var i=0;i<g.items.length;i++)if(DONE.has(g.items[i]))n++;g.ctEl.textContent=n+' / '+g.items.length;if(!g.note)cd+=n});c.ctEl.textContent=cd+' / '+c.size;done+=cd});
+  DATA.forEach(function(c){var cd=0;c.groups.forEach(function(g){var n=0;for(var i=0;i<g.items.length;i++)if(DONE.has(g.items[i]))n++;g.ctEl.textContent=n+' / '+g.items.length;if(!g.note)cd+=n});c.ctEl.textContent=cd+' / '+c.size});
+  var done=DONE.size;
   document.getElementById('pgt').textContent='已抵達 '+done.toLocaleString()+' / '+total.toLocaleString()+'（'+(total?(done*100/total).toFixed(1):0)+'%）';
-  document.getElementById('pgi').style.width=(total?done*100/total:0)+'%'
+  document.getElementById('pgi').style.width=(total?done*100/total:0)+'%';
+  document.getElementById('cpd').textContent='複製已打勾（'+done+'）';
+  document.getElementById('cpu').textContent='複製未打勾（'+(total-done)+'）';
+  setDirty()
 }
 counts();
 var cs=document.getElementById('coords');
 cs.addEventListener('click',function(ev){var t=ev.target;if(t.classList.contains('cc')){var k=t.parentNode.dataset.k;copy(k,'已複製 '+k)}});
 cs.addEventListener('change',function(ev){var t=ev.target;if(t.type!=='checkbox'||!t.parentNode.dataset||!t.parentNode.dataset.k)return;
-  var k=t.parentNode.dataset.k;if(t.checked)DONE.add(k);else DONE.delete(k);save();
+  var k=t.parentNode.dataset.k;if(t.checked)DONE.add(k);else DONE.delete(k);
   var rows=cs.querySelectorAll('.r[data-k="'+k+'"]');for(var i=0;i<rows.length;i++){rows[i].classList.toggle('done',t.checked);rows[i].querySelector('input').checked=t.checked}
-  counts()});
+  dirty=true;save();counts()});
 document.getElementById('hd').onchange=function(){cs.classList.toggle('hd',this.checked)};
-document.getElementById('bk').onclick=function(){var a=Array.from(DONE);if(!a.length){toast('目前沒有已抵達的座標');return}copy(a.join('\n'),'已複製 '+a.length+' 筆進度，請貼到備忘錄保存')};
-var dlg=document.getElementById('dlg');
-document.getElementById('rs').onclick=function(){document.getElementById('ta').value='';if(dlg.showModal)dlg.showModal();else dlg.setAttribute('open','')};
-document.getElementById('dno').onclick=function(){dlg.close()};
-document.getElementById('dok').onclick=function(){
-  var known=new Set();ALL.forEach(function(g){g.items.forEach(function(k){known.add(k)})});
-  var n=0;document.getElementById('ta').value.split(/\r?\n/).forEach(function(l){var m=l.trim().match(/^(-?\d+\.?\d*)\s*,\s*(-?\d+\.?\d*)$/);if(!m)return;var k=m[1]+', '+m[2];if(known.has(k)&&!DONE.has(k)){DONE.add(k);n++}});
-  save();ALL.forEach(function(g){if(g.ok)render(g)});counts();dlg.close();toast('已還原 '+n+' 筆')};
+function checkedList(){return UNI.filter(function(k){return DONE.has(k)})}
+document.getElementById('cpd').onclick=function(){var a=checkedList();if(!a.length){toast('還沒有勾選任何座標');return}copy(a.join('\n'),'已複製已打勾 '+a.length+' 筆，已備份',function(){setDirty(false)})};
+document.getElementById('cpu').onclick=function(){var a=UNI.filter(function(k){return !DONE.has(k)});if(!a.length){toast('全部都已打勾');return}copy(a.join('\n'),'已複製未打勾 '+a.length+' 筆')};
+document.getElementById('dok').onclick=function(){var add=0,had=0,bad=0;
+  document.getElementById('ta').value.split(/\r?\n/).forEach(function(l){l=l.trim();if(!l)return;var m=l.match(/(-?\d+\.?\d*)\s*[,，]\s*(-?\d+\.?\d*)/);if(!m){bad++;return}var k=norm(m[1],m[2]);if(!seen[k]){bad++;return}if(DONE.has(k))had++;else{DONE.add(k);add++}});
+  ALL.forEach(function(g){if(g.ok)render(g)});save();counts();
+  toast('已套用 '+add+' 筆'+(had?'，'+had+' 筆原本就已勾選':'')+(bad?'，'+bad+' 筆找不到':''));
+  document.getElementById('ta').value=''};
+var lv=document.getElementById('lv');
+function showLeave(){document.getElementById('lvn').textContent=DONE.size;if(lv.showModal)lv.showModal();else lv.setAttribute('open','')}
+function closeLv(){if(lv.close)lv.close();else lv.removeAttribute('open')}
+function go(){closeLv();skipUnload=true;var f=pend;pend=null;if(f)f()}
+document.getElementById('lvs').onclick=function(){var a=checkedList();copy(a.join('\n'),'已複製已打勾 '+a.length+' 筆',function(){setDirty(false);go()})};
+document.getElementById('lvx').onclick=go;
+document.getElementById('lvk').onclick=function(){closeLv();if(pendPop)history.pushState({g:1},'');pend=null;pendPop=false};
+window.addEventListener('beforeunload',function(e){if(dirty&&!skipUnload){e.preventDefault();e.returnValue=''}});
+history.pushState({g:1},'');
+window.addEventListener('popstate',function(){if(!dirty||skipUnload){skipUnload=true;history.back();return}pend=function(){history.back()};pendPop=true;showLeave()});
+var bk=document.querySelector('.back');
+if(bk)bk.addEventListener('click',function(ev){if(!dirty)return;ev.preventDefault();var h=bk.href;pend=function(){location.href=h};pendPop=false;showLeave()});
 </script>
 
 </body>
