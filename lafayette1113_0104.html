@@ -39,12 +39,12 @@ ul{margin:0;padding-left:20px}li{margin:4px 0}
 <section class="card"><h2>活動時間</h2><div class="tm">2026/11/13（五）10:00 ～ 2027/1/4（一）21:00（當地時間）<small>台灣時間 2026/11/13 17:00 ～ 2027/1/5 04:00</small></div></section>
 <section class="card"><h2>地點</h2>香榭麗舍大道老佛爺百貨（Galeries Lafayette Champs-Élysées）<div class="note">60 Av. des Champs-Élysées, 75008 Paris, France</div></section>
 <section class="card"><h2>應用程式內活動</h2><ul><li>會場有 <b>1 個特殊地點</b>，向下滑動可獲得金色花苗，會長成印有老佛爺百貨標誌的<b>紅色照片鈕扣徽章</b>飾品皮克敏。每位玩家整個活動期間只能獲得 1 盆。</li><li>滑動特殊地點時會收到地點挑戰：<b>健走 2,000 步</b>。完成可獲得<b>明信片</b>和金色花苗，花苗會長成「<b>2025 裝飾</b>」飾品皮克敏（8 種之一，隨機發放）。</li></ul></section>
-<section class="card ph"><h2 style="justify-content:center">📍 座標</h2>座標尚未提供</section>
+<section class="card"><h2><span>📍 特殊地點座標</span><button class="cp" id="all">複製全部</button></h2><div class="g" id="g"></div></section>
 <div class="src">資訊來源：<a href="https://pikminbloom.com/zh_hant/news/nov26-lafayette-fr" target="_blank" rel="noopener">https://pikminbloom.com/zh_hant/news/nov26-lafayette-fr</a></div>
 </main>
 <div id="t"></div>
 <script>
-var P=[];
+var P=[["老佛爺百貨", "特殊地點・金色花苗（紅色照片鈕扣徽章）", "48.870759, 2.3062"]];
 var T=document.getElementById('t'),tm;
 function toast(m){T.textContent=m;T.className='s';clearTimeout(tm);tm=setTimeout(function(){T.className=''},1400)}
 function copy(txt,msg){function fb(){var a=document.createElement('textarea');a.value=txt;a.style.cssText='position:fixed;opacity:0';document.body.appendChild(a);a.select();try{document.execCommand('copy');toast(msg)}catch(e){toast('複製失敗')}document.body.removeChild(a)}
