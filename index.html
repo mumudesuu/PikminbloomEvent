@@ -32,6 +32,12 @@ h1{font-size:24px;margin:0 0 4px}
 .fr{color:var(--soon);font-weight:600}.tk-free{color:var(--on);font-weight:600}.tk-pay{color:var(--soon);font-weight:600}
 .opt{font:inherit;font-size:13px;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:8px;padding:3px 10px;cursor:pointer;margin-bottom:14px}
 .opt.a{background:var(--on);border-color:var(--on);color:#fff}
+.sbox{position:relative;margin-bottom:12px}.sbox input{width:100%;font:inherit;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:10px;padding:9px 34px 9px 12px}
+.sbox input:focus{outline:none;border-color:var(--ac)}
+.sbox button{position:absolute;right:8px;top:50%;transform:translateY(-50%);border:0;background:none;color:var(--mut);cursor:pointer;font-size:15px;display:none}
+.flt{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px}.flt .opt{margin-bottom:0}
+.rc{color:var(--mut);font-size:13px;margin-bottom:6px;min-height:19px}
+.sec{font-size:16px;font-weight:600;margin:18px 0 8px;display:flex;align-items:baseline;gap:8px}.sec small{color:var(--mut);font-weight:400;font-size:13px}
 .foot{margin-top:28px;font-size:12px;color:var(--mut);text-align:center}
 .cd{margin-top:6px;font-size:13px;font-weight:600}
 .empty{color:var(--mut);text-align:center;padding:40px 0}
@@ -41,8 +47,10 @@ h1{font-size:24px;margin:0 0 4px}
 <main>
 <h1>沐的皮克敏活動筆記🎮</h1>
 <div class="sub">依活動日期自動判斷狀態・點進活動查看詳情</div>
+<div class="sbox"><input id="q" type="search" placeholder="搜尋活動名稱、盆類型（例：咖啡杯、照片鈕扣）、地區…" autocomplete="off"><button id="qc" aria-label="清除搜尋">✕</button></div>
 <div class="tabs" id="tabs"></div>
-<button class="opt" id="free">只看免費</button>
+<div class="flt"><button class="opt" id="card">📮 有明信片</button><button class="opt" id="seed">🌱 有金盆</button><button class="opt" id="free">只看免費</button></div>
+<div class="rc" id="rc"></div>
 <div id="list"></div>
 <div class="foot">由沐整理更新網上資訊</div>
 </main>
@@ -129,7 +137,11 @@ var EVENTS=[
   seed:{n:"1 盆",items:["照片鈕扣徽章（紅色・樂天專屬圖樣）"]},card:"有（各場地圖樣不同）",
   freq:"限一次",freqNote:"完整活動期間每人 1 盆",ticket:"免費",url:"lotte1023_1213.html"}
 ];
-var onlyFree=false;
+var onlyFree=false,onlyCard=false,onlySeed=false,q="";
+function hasCard(e){return !!e.card&&!/^(無|未)/.test(e.card)}
+function hasSeed(e){return !!(e.seed&&e.seed.items&&e.seed.items.length)}
+function isPerm(e){return !!(e.tags&&e.tags.indexOf("常駐")>-1)}
+function hay(e){return [e.title,e.desc,(e.tags||[]).join(" "),e.seed?e.seed.n:"",e.seed?e.seed.items.join(" "):"",e.card,e.freq,e.freqNote,e.ticket].join(" ").toLowerCase().replace(/臺/g,"台")}
 var TABS=[["all","全部"],["on","進行中"],["soon","尚未開始"],["end","已結束"]],cur="on";
 var LBL={on:"進行中",soon:"尚未開始",end:"已結束"};
 function ts(s){return new Date(s+":00+08:00").getTime()}
@@ -138,15 +150,23 @@ function days(ms){var d=Math.floor(ms/864e5),h=Math.floor(ms%864e5/36e5);return 
 function render(){
   var now=Date.now();
   var L=EVENTS.map(function(e){var a=ts(e.start),b=ts(e.end);return Object.assign({a:a,b:b,st:now<a?"soon":now>b?"end":"on"},e)});
-  var cnt={all:L.length,on:0,soon:0,end:0};L.forEach(function(e){cnt[e.st]++});
+  var terms=q.trim().toLowerCase().replace(/臺/g,"台").split(/\s+/).filter(Boolean);
+  var base=L.filter(function(e){
+    if(onlyFree&&e.pay)return false;
+    if(onlyCard&&!hasCard(e))return false;
+    if(onlySeed&&!hasSeed(e))return false;
+    if(terms.length){var h=hay(e);for(var i=0;i<terms.length;i++)if(h.indexOf(terms[i])<0)return false}
+    return true});
+  var cnt={all:base.length,on:0,soon:0,end:0};base.forEach(function(e){cnt[e.st]++});
   var tb=document.getElementById("tabs");tb.innerHTML="";
   TABS.forEach(function(t){var b=document.createElement("button");b.className=cur===t[0]?"a":"";b.innerHTML=t[1]+"<b>"+cnt[t[0]]+"</b>";b.onclick=function(){cur=t[0];render()};tb.appendChild(b)});
-  var v=L.filter(function(e){return (cur==="all"||e.st===cur)&&(!onlyFree||!e.pay)});
+  var v=base.filter(function(e){return cur==="all"||e.st===cur});
   var ord={on:0,soon:1,end:2};
   v.sort(function(x,y){return x.st!==y.st?ord[x.st]-ord[y.st]:x.st==="on"?x.b-y.b:x.st==="soon"?x.a-y.a:y.b-x.b});
   var ls=document.getElementById("list");ls.innerHTML="";
-  if(!v.length){ls.innerHTML='<div class="empty">這個分類目前沒有活動</div>';return}
-  v.forEach(function(e){
+  document.getElementById("rc").textContent=v.length?"共 "+v.length+" 個活動":"";
+  if(!v.length){ls.innerHTML='<div class="empty">沒有符合的活動</div>';return}
+  function addCard(e){
     var a=document.createElement("a");a.className="ev";a.href=e.url;
     var cd=e.st==="on"?"還剩 "+days(e.b-now):e.st==="soon"?days(e.a-now)+"後開始":"";
     a.innerHTML='<div class="top"><span class="ttl"></span><span class="badge s-'+e.st+'">'+LBL[e.st]+'</span></div><div class="dt"></div><div class="ds"></div>'+(e.tags?'<div class="tags"></div>':'')+(cd?'<div class="cd" style="color:var(--'+(e.st==="on"?"on":"soon")+')"></div>':"");
@@ -165,8 +185,18 @@ function render(){
     if(e.tags)e.tags.forEach(function(t){var x=document.createElement("span");x.textContent=t;a.querySelector(".tags").appendChild(x)});
     if(cd)a.querySelector(".cd").textContent=cd;
     ls.appendChild(a)
-  })
+  }
+  var lim=v.filter(function(e){return !isPerm(e)}),pm=v.filter(isPerm);
+  function sec(t,n){var h=document.createElement("div");h.className="sec";h.innerHTML="<span></span><small></small>";h.firstChild.textContent=t;h.lastChild.textContent=n+" 個";ls.appendChild(h)}
+  if(lim.length){sec("限時活動",lim.length);lim.forEach(addCard)}
+  if(pm.length){sec("常駐活動",pm.length);pm.forEach(addCard)}
 }
+var qi=document.getElementById("q"),qc=document.getElementById("qc");
+qi.oninput=function(){q=this.value;qc.style.display=q?"block":"none";render()};
+qc.onclick=function(){qi.value="";q="";qc.style.display="none";qi.focus();render()};
+function tg(id,get,set){document.getElementById(id).onclick=function(){set(!get());this.className="opt"+(get()?" a":"");render()}}
+tg("card",function(){return onlyCard},function(v){onlyCard=v});
+tg("seed",function(){return onlySeed},function(v){onlySeed=v});
 document.getElementById("free").onclick=function(){onlyFree=!onlyFree;this.className="opt"+(onlyFree?" a":"");render()};
 render();setInterval(render,60000);
 </script>
